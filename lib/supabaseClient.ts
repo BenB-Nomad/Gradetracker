@@ -23,15 +23,15 @@ export function createClientServer(opts?: { allowCookieWrite?: boolean }) {
           ? (name: string, value: string, options: CookieOptions) => {
               cookieStore.set({ name, value, ...options });
             }
-          : (_name: string, _value: string, _options: CookieOptions) => {
-              // no-op outside Server Actions/Route Handlers
+          : (name: string, value: string, options: CookieOptions) => {
+              void name; void value; void options;
             },
         remove: allowWrite
           ? (name: string, options: CookieOptions) => {
               cookieStore.set({ name, value: "", ...options });
             }
-          : (_name: string, _options: CookieOptions) => {
-              // no-op
+          : (name: string, options: CookieOptions) => {
+              void name; void options;
             },
       },
     }

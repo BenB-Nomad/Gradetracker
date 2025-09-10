@@ -117,7 +117,7 @@ export async function deleteAssessment(id: string) {
 }
 
 const enrollSchema = z.object({ code: z.string().min(2).max(32) });
-export async function enrollModuleFromCatalog(formData: FormData) {
+export async function enrollModuleFromCatalog(formData: FormData): Promise<void> {
   const user = await requireUser();
   const parsed = enrollSchema.safeParse({ code: String(formData.get("code")) });
   if (!parsed.success) throw new Error("Invalid module code");
@@ -156,7 +156,6 @@ export async function enrollModuleFromCatalog(formData: FormData) {
     }
   }
   revalidatePath('/dashboard');
-  return { ok: true } as const;
 }
 
 
