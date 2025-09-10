@@ -1,15 +1,16 @@
-import { NextResponse } from "next/server";
+import { NextResponse, type NextRequest } from "next/server";
 import { getClient } from "@/lib/db";
 import { percentToLetter, type ScaleKey, LETTER_TO_CP_21 } from "@/lib/grades";
 
-export async function GET(req: Request, { params }: { params: { id: string } }) {
+export async function GET(request: NextRequest, ctx: { params: Promise<{ id: string }> }) {
+  const { id } = await ctx.params;
   const supabase = getClient();
-  const { data: module } = await supabase.from("modules").select("*").eq("id", params.id).single();
+  const { data: module } = await supabase.from("modules").select("*").eq("id", id).single();
   if (!module) return NextResponse.json({ error: "Not found" }, { status: 404 });
   const { data: assessments } = await supabase
     .from("assessments")
     .select("*")
-    .eq("module_id", params.id)
+    .eq("module_id", id)
     .order("created_at", { ascending: true });
 
   const scale = module.scale as ScaleKey;
