@@ -28,7 +28,7 @@ export type AssessmentRow = {
 };
 
 export function getClient() {
-  return createClientServer();
+  return createClientServer({ allowCookieWrite: false });
 }
 
 
