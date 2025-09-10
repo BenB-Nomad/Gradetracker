@@ -68,7 +68,7 @@ export async function createDefaultModule() {
       .select()
       .single();
     if (!error && data) return data;
-    if (error && (error as any).code !== "23505") throw error;
+    if (error && (error as { code?: string } | null)?.code !== "23505") throw error;
   }
   throw new Error("Could not create a unique module code. Please try again.");
 }
@@ -122,7 +122,7 @@ export async function enrollModuleFromCatalog(formData: FormData) {
   const parsed = enrollSchema.safeParse({ code: String(formData.get("code")) });
   if (!parsed.success) throw new Error("Invalid module code");
   const supabase = getClient();
-  let mod: any = null;
+  let mod: { code: string; title: string; ects: number; default_scale: "standard_40" | "alt_linear_40" } | null = null;
   const { data: dbcat } = await supabase
     .from("module_catalog")
     .select("code,title,ects,default_scale")
@@ -138,7 +138,7 @@ export async function enrollModuleFromCatalog(formData: FormData) {
     scale: mod.default_scale,
     use_ucd_21: true,
   }).select('id').single();
-  if (error && (error as any).code !== "23505") throw error; // ignore duplicate enrollment
+  if (error && (error as { code?: string } | null)?.code !== "23505") throw error; // ignore duplicate enrollment
   const moduleId = inserted?.id;
   if (moduleId) {
     const defs = DEFAULT_ASSESSMENTS[mod.code] || [];

@@ -1,12 +1,12 @@
 import Link from "next/link";
 import { requireUser } from "@/lib/auth";
-import { getClient, type ModuleRow, type AssessmentRow } from "@/lib/db";
+import { getClient, type ModuleRow } from "@/lib/db";
 import { computeGPA, computeModuleOutcome, type ScaleKey } from "@/lib/grades";
 import { enrollModuleFromCatalog } from "@/app/actions";
 import { DEFAULT_CATALOG } from "@/lib/catalog";
 
 export default async function DashboardPage() {
-  const user = await requireUser();
+  await requireUser();
   const supabase = getClient();
   const { data: modules } = await supabase
     .from("modules")
@@ -37,7 +37,7 @@ export default async function DashboardPage() {
         <h1 className="text-2xl font-semibold">Dashboard</h1>
         <form action={enrollModuleFromCatalog} className="flex items-center gap-2">
           <select name="code" className="border rounded-md p-2 text-sm">
-            {((catalog && catalog.length ? catalog : DEFAULT_CATALOG) as any[]).map((c: any) => (
+            {((catalog && catalog.length ? catalog : DEFAULT_CATALOG)).map((c) => (
               <option key={c.code} value={c.code}>{c.code} — {c.title}</option>
             ))}
           </select>
