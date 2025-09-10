@@ -122,13 +122,16 @@ export async function enrollModuleFromCatalog(formData: FormData) {
   const parsed = enrollSchema.safeParse({ code: String(formData.get("code")) });
   if (!parsed.success) throw new Error("Invalid module code");
   const supabase = getClient();
-  let mod: { code: string; title: string; ects: number; default_scale: "standard_40" | "alt_linear_40" } | null = null;
+  type CatalogPick = { code: string; title: string; ects: number; default_scale: "standard_40" | "alt_linear_40" };
+  let mod: CatalogPick | null = null;
   const { data: dbcat } = await supabase
     .from("module_catalog")
     .select("code,title,ects,default_scale")
     .eq("code", parsed.data.code)
     .maybeSingle();
-  mod = dbcat ?? DEFAULT_CATALOG.find(c => c.code === parsed.data.code);
+  const fromDb = (dbcat as CatalogPick | null) ?? null;
+  const fromFallback = (DEFAULT_CATALOG.find(c => c.code === parsed.data.code) as CatalogPick | undefined) ?? null;
+  mod = fromDb ?? fromFallback;
   if (!mod) throw new Error("Module not found");
   const { data: inserted, error } = await supabase.from("modules").insert({
     user_id: user.id,
