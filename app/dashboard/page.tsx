@@ -3,7 +3,7 @@ import { requireUser } from "@/lib/auth";
 import { getClient, type ModuleRow } from "@/lib/db";
 import { computeGPA, computeModuleOutcome, type ScaleKey } from "@/lib/grades";
 import { enrollModuleFromCatalog } from "@/app/actions";
-import { DEFAULT_CATALOG } from "@/lib/catalog";
+import { DEFAULT_CATALOG, type CatalogItem } from "@/lib/catalog";
 
 export default async function DashboardPage() {
   await requireUser();
@@ -21,11 +21,12 @@ export default async function DashboardPage() {
         .from("assessments")
         .select("weight, mark, status")
         .eq("module_id", m.id);
-      const outcome = computeModuleOutcome(
-        (comps ?? []).map((c: any) => ({ weight: Number(c.weight), mark: c.mark == null ? 0 : Number(c.mark), status: c.status })),
-        m.scale as ScaleKey,
-        m.use_ucd_21 ? "ucd_21" : "simple"
-      );
+      const compsTyped: { weight: number; mark: number; status: "entered" | "abs" | "nm" | "pending" }[] = (comps ?? []).map((c) => ({
+        weight: Number(c.weight),
+        mark: c.mark == null ? 0 : Number(c.mark),
+        status: c.status as "entered" | "abs" | "nm" | "pending",
+      }));
+      const outcome = computeModuleOutcome(compsTyped, m.scale as ScaleKey, m.use_ucd_21 ? "ucd_21" : "simple");
       outcomes.push({ ects: m.ects, moduleGradePoint: outcome.moduleGradePoint });
     }
     gpa = computeGPA(outcomes);
@@ -37,7 +38,7 @@ export default async function DashboardPage() {
         <h1 className="text-2xl font-semibold">Dashboard</h1>
         <form action={enrollModuleFromCatalog} className="flex items-center gap-2">
           <select name="code" className="border rounded-md p-2 text-sm">
-            {((catalog && catalog.length ? catalog : DEFAULT_CATALOG)).map((c) => (
+            {(((catalog && catalog.length ? catalog : DEFAULT_CATALOG) as CatalogItem[])).map((c) => (
               <option key={c.code} value={c.code}>{c.code} — {c.title}</option>
             ))}
           </select>

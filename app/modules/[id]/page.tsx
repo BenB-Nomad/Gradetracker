@@ -46,7 +46,7 @@ export default async function ModulePage({ params }: { params: { id: string } })
         </div>
       )}
 
-      <AssessmentsTable moduleId={module.id} assessments={(assessments ?? []) as any} scale={module.scale as ScaleKey} />
+      <AssessmentsTable moduleId={module.id} assessments={(assessments ?? []) as AssessmentRow[]} scale={module.scale as ScaleKey} />
 
       <WhatIfPanel
         components={(assessments ?? []).map(a => ({ id: a.id, name: a.name, weight: Number(a.weight), mark: a.mark == null ? 0 : Number(a.mark), status: a.status }))}
