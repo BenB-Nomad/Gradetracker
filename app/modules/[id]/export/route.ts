@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { getClient } from "@/lib/db";
-import { computeModuleOutcome, percentToLetter, type ScaleKey, LETTER_TO_CP_21 } from "@/lib/grades";
+import { percentToLetter, type ScaleKey, LETTER_TO_CP_21 } from "@/lib/grades";
 
 export async function GET(req: Request, { params }: { params: { id: string } }) {
   const supabase = getClient();

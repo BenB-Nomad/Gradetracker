@@ -51,7 +51,7 @@ export function AssessmentInput({ id, weight }: Props) {
 
   return (
     <div className="flex items-center gap-2">
-      <select value={mode} onChange={(e) => setMode(e.currentTarget.value as any)} className="border rounded p-1 text-sm">
+      <select value={mode} onChange={(e) => setMode(e.currentTarget.value as "raw" | "%" | "letter")} className="border rounded p-1 text-sm">
         <option value="raw">Mark</option>
         <option value="%">Percent</option>
         <option value="letter">Letter</option>

@@ -1,11 +1,10 @@
 import { notFound } from "next/navigation";
 import { requireUser } from "@/lib/auth";
-import { getClient, type AssessmentRow, type ModuleRow } from "@/lib/db";
-import { computeModuleOutcome, percentToLetter, type ScaleKey, LETTER_TO_CP_21, weightHealth, letterLowerBound } from "@/lib/grades";
+import { getClient, type AssessmentRow } from "@/lib/db";
+import { computeModuleOutcome, percentToLetter, type ScaleKey, LETTER_TO_CP_21, weightHealth } from "@/lib/grades";
 import Link from "next/link";
 import { WhatIfPanel } from "@/components/WhatIfPanel";
 import { AssessmentInput } from "@/components/AssessmentInput";
-import { updateAssessment } from "@/app/actions";
 
 export default async function ModulePage({ params }: { params: { id: string } }) {
   await requireUser();
@@ -58,9 +57,7 @@ export default async function ModulePage({ params }: { params: { id: string } })
   );
 }
 
-function displayStatus(status: string) {
-  return status.toUpperCase();
-}
+//
 
 // status is edited via the Save form per row
 

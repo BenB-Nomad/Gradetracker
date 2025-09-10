@@ -41,13 +41,7 @@ async function login(formData: FormData) {
   redirect("/dashboard");
 }
 
-async function magicLink(formData: FormData) {
-  "use server";
-  const supabase = createClientServer();
-  const email = String(formData.get("email"));
-  const { error } = await supabase.auth.signInWithOtp({ email });
-  if (error) redirect("/login?error=Could%20not%20send%20magic%20link.");
-}
+// magic link moved to /login/magic
 
 // confirmation resend and magic link kept available on dedicated pages when needed
 

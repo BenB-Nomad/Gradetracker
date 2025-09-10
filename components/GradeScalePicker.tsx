@@ -16,7 +16,7 @@ export function GradeScalePicker({ name, value, defaultValue, onChange }: Props)
         name={name}
         value={value}
         defaultValue={defaultValue}
-        onChange={(e) => onChange?.(e.currentTarget.value as any)}
+        onChange={(e) => onChange?.(e.currentTarget.value as ("standard_40" | "alt_linear_40"))}
         className="border rounded-md p-1 text-sm"
       >
         <option value="standard_40">Standard 40% Pass</option>
