@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { requireUser } from "@/lib/auth";
-import { getClient, type ModuleRow } from "@/lib/db";
+import { getClient } from "@/lib/db";
 import { computeGPA, computeModuleOutcome, type ScaleKey } from "@/lib/grades";
 import { enrollModuleFromCatalog } from "@/app/actions";
 import { DEFAULT_CATALOG, type CatalogItem } from "@/lib/catalog";
@@ -50,7 +50,7 @@ export default async function DashboardPage() {
         <div className="text-3xl font-semibold">{gpa.toFixed(2)}</div>
       </div>
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-        {(modules ?? []).map((m: ModuleRow) => (
+        {(modules ?? []).map((m) => (
           <Link key={m.id} href={`/modules/${m.id}`} className="rounded-md border p-4 hover:bg-muted/40">
             <div className="font-medium">{m.code ?? "Untitled"}</div>
             <div className="text-sm text-muted-foreground">{m.title ?? "Module"}</div>
