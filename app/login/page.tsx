@@ -27,7 +27,8 @@ export default async function LoginPage({ searchParams }: { searchParams?: Promi
 
 async function login(formData: FormData) {
   "use server";
-  const supabase = createClientServer();
+  const supabase = createClientServer({ allowCookieWrite: true });
+  const supabase = createClientServer({ allowCookieWrite: true });
   const email = String(formData.get("email"));
   const password = String(formData.get("password"));
   const { error } = await supabase.auth.signInWithPassword({ email, password });
