@@ -2,7 +2,7 @@ import { redirect } from "next/navigation";
 import { createClientServer } from "@/lib/supabaseClient";
 
 export async function getSessionUserOrNull() {
-  const supabase = createClientServer();
+  const supabase = createClientServer({ allowCookieWrite: false });
   const {
     data: { user },
   } = await supabase.auth.getUser();

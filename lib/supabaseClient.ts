@@ -19,14 +19,20 @@ export function createClientServer(opts?: { allowCookieWrite?: boolean }) {
         get(name: string) {
           return cookieStore.get(name)?.value;
         },
-        set(name: string, value: string, options: CookieOptions) {
-          if (!allowWrite) return; // Only allowed in Server Actions/Route Handlers
-          cookieStore.set({ name, value, ...options });
-        },
-        remove(name: string, options: CookieOptions) {
-          if (!allowWrite) return;
-          cookieStore.set({ name, value: "", ...options });
-        },
+        set: allowWrite
+          ? (name: string, value: string, options: CookieOptions) => {
+              cookieStore.set({ name, value, ...options });
+            }
+          : (_name: string, _value: string, _options: CookieOptions) => {
+              // no-op outside Server Actions/Route Handlers
+            },
+        remove: allowWrite
+          ? (name: string, options: CookieOptions) => {
+              cookieStore.set({ name, value: "", ...options });
+            }
+          : (_name: string, _options: CookieOptions) => {
+              // no-op
+            },
       },
     }
   );
